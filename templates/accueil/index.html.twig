@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+
+    <section class="hero">
+        <div class="hero-section">
+            <div>
+                <h1>organisez vos voyages simplement et efficacement.</h1>
+                    <p>voyage, activités, budget et réservation réunis en un seul endroit.voyage, activités, budget et réservation réunis en un seul endroit.
+                    voyage, activités, budget et réservation réunis en un seul endroit.voyage, activités, budget et réservation réunis en un seul endroit.voyage, activités, budget et réservation réunis en un </p>
+                <div class="hero-btn">
+                    <a class="btn-commencer" href="#">Commencer</a>
+                    <a class="btn-voyage" href="#">voir les voyages</a>
+                </div>    
+            </div>
+
+                <div class="hero-img">
+                    <img src="{{ asset('img/fond.png') }}" alt="">
+                </div>
+        </div>
+    </section>
+
+    <section class="carousel">
+        <div class="carousel-titre">
+            <h2>Voyages en tendance</h2>
+        </div>
+
+        <div class="carousel-grid">
+            <article class="carousel-carte">
+                <img class="carousel-img" src="{{ asset('img/paris.png') }}" alt="">
+                <h3>Paris</h3>
+                <a class="carousel-btn" href="#">Voir le voyage</a>
+            </article>
+        </div>    
+    </section> 
+
+    <section class="services">
+        <div class="services-titre">
+            <h2>Nos services</h2>
+        </div>
+
+        <div class="services-grid">
+            <article class="service-carte">
+                <div class="service-icon">icone</div>
+                <h3>Vol</h3>
+                <p>Un vol aller-retour est automatiquement intégré à votre séjour selon la destination et les dates choisies.</p>
+            </article>
+
+            <article class="service-carte">
+                <div class="service-icon">icone</div>
+                <h3>Hébergements</h3>
+                <p>Un hébergement adapté à votre destination est automatiquement intégré, avec toutes les informations.</p>
+            </article>
+
+            <article class="service-carte">
+                <div class="service-icon">icone</div>
+                <h3>Activités</h3>
+                <p>Un programme d’activités est déjà intégré à votre séjour, pour chaque jour afin de profiter pleinement.</p>
+            </article>
+
+            <article class="service-carte">
+                <div class="service-icon">icone</div>
+                <h3>Séjour</h3>
+                <p>Toutes les informations du voyage regroupées au même endroit pour une préparation simple et rapide.</p>
+            </article>
+        </div>
+    </section>
+    
+        
+    <section class="cta">
+        <div class="cta-container">
+            <h2>Prêt à organiser votre prochain voyage ?</h2>
+            <a class="btn-cta " href="#">Créer votre compte gratuitement</a>
+        </div>
+    </section>
+
+ 
+
+{% endblock %}
+
+
+

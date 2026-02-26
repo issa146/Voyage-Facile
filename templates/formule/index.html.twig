@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choisir une formule{% endblock %}
+
+{% block body %}
+  <h1>Choisissez votre formule</h1>
+
+  {% if app.user and app.user.formule %}
+    <p>Votre formule actuelle : {{ app.user.formule.nom }}</p>
+  {% endif %}
+
+  {% for formule in formules %}
+    <div style="border:1px solid #ddd; padding:12px; margin:12px 0;">
+      <strong>{{ formule.nom }}</strong>
+      — {{ formule.prix }} €
+      — ({{ formule.niveau }})
+
+      {% if app.user %}
+        <form method="post" action="{{ path('app_formule_choisir', {id: formule.id}) }}" style="margin-top:10px;">
+          <button type="submit">Choisir</button>
+        </form>
+      {% else %}
+        <p><em>Connectez-vous pour choisir une formule.</em></p>
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endblock %}
