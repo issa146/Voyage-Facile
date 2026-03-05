@@ -44,7 +44,24 @@ final class VoyageController extends AbstractController
     public function detail(string $destination, UnsplashService $unsplash) {
         $destination = trim($destination);
 
-        $imageUrl = $unsplash->getImageUrl($destination);
+        $imageUrl = $unsplash->getImageUrl($destination); # j'appel mon service Unsplash
+
+        $formule = 'basic';
+        $prix = 210;
+
+        return $this->render('voyage/detail.html.twig', [
+            'destination' => $destination,
+            'imageUrl' => $imageUrl,
+            'formule' => $formule,
+            'prix' => $prix,
+        ]); 
+            
+            
+        
+
+        
+
+
 
         
     }
