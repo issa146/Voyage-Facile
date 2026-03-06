@@ -63,6 +63,12 @@ class Voyage
     #[ORM\OneToMany(targetEntity: Activite::class, mappedBy: 'voyage', orphanRemoval: true)]
     private Collection $activites;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageUrl = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
+    private ?string $prix = null;
+
     public function __construct()
     {
         $this->activites = new ArrayCollection();
@@ -255,6 +261,30 @@ class Voyage
                 $activite->setVoyage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): static
+    {
+        $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    public function getPrix(): ?string
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(string $prix): static
+    {
+        $this->prix = $prix;
 
         return $this;
     }

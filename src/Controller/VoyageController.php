@@ -41,7 +41,7 @@ final class VoyageController extends AbstractController
 
 
     #[Route('/voyage/{destination}', name: 'voyage_detail', requirements:['destination' => '.+'])]
-    public function detail(string $destination, UnsplashService $unsplash) {
+    public function detail(string $destination, UnsplashService $unsplash): Response {
         $destination = trim($destination);
 
         $imageUrl = $unsplash->getImageUrl($destination); # j'appel mon service Unsplash
