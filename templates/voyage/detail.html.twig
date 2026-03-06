@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %} Détail - {{destination}}{% endblock %}
+
+{% block body %}
+<section class= "voyage-detail">
+    <h1>{{destination}}<h1>
+
+    {% if imageUrl %}
+        <img src="{{ imageUrl }}" alt="" style= "max-width: 900px; width: 100%; border-radius: 12px">
+    {% endif %}   
+
+    <p> formule : {{ formule }} </p>
+    <p> prix : {{ prix }}€ </p>
+
+    <a href="{{path('app_voyage')}}">retour</a>
+
+</section>
+{% endblock %}

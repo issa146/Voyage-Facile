@@ -31,7 +31,7 @@
                 <p class='voyage-formule'> formule : {{card.formule}}</p>
                 <p class='voyage-prix'> prix : {{card.prix}}</p>
 
-                <a class='btn-detail' href='#'>détail d'un voyage</a>
+                <a class="btn-detail" href="{{ path('voyage_detail', { destination: card.destination }) }}">détail d'un voyage</a>
             </div>
         </article>
     {% endfor %}
