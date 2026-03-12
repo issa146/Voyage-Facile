@@ -55,7 +55,7 @@ class Voyage
 
     #[ORM\ManyToOne(inversedBy: 'voyages')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?formule $formule = null;
+    private ?Formule $formule = null;
 
     /**
      * @var Collection<int, Activite>
