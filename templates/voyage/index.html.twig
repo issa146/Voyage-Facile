@@ -16,22 +16,22 @@
      </div>
 
     <div class='voyage-grid'>
-        {% for card in cards %}
+        {% for voyage in voyages %}
         <article class='voyage-card'>
             <div class='voyage-img'>
-                {% if card.image %}
-                <img src='{{card.image}}' alt=''>
+                {% if voyage.imageUrl %}
+                <img src='{{voyage.imageUrl}}' alt=''>
                 {% else %}
-                <div class='aucune-img'> Aucune image </div>
+                <div class='aucune-img'>Aucune image</div>
                 {% endif %}
             </div>
 
             <div class='voyage-contenu'>
-                <p class='voyage-destination'> destination : {{card.destination}}</p>
-                <p class='voyage-formule'> formule : {{card.formule}}</p>
-                <p class='voyage-prix'> prix : {{card.prix}}</p>
+                <p class='voyage-destination'> destination : {{voyage.destination}}</p>
+                <p class='voyage-formule'> formule : {{voyage.formule.nom}}</p>
+                <p class='voyage-prix'> prix : {{voyage.prix}}</p>
 
-                <a class="btn-detail" href="{{ path('voyage_detail', { destination: card.destination }) }}">détail d'un voyage</a>
+                <a class="btn-detail" href="{{ path('voyage_detail', { id: voyage.id }) }}">détail d'un voyage</a>
             </div>
         </article>
     {% endfor %}

@@ -54,7 +54,7 @@ final class VoyageController extends AbstractController
 
             return $this->render('voyage/index.html.twig', [
             'destination' => $destination,
-            'vo$voyages' =>$voyages   
+            'voyages' =>$voyages   
         ]);     
 
     }
@@ -67,12 +67,6 @@ final class VoyageController extends AbstractController
             'voyage' => $voyage,
         ]); 
             
-            
-        
-
-        
-
-
 
         
     }
