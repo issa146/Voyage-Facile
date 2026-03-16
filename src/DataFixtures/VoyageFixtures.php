@@ -45,7 +45,4 @@ class VoyageFixtures extends Fixture {
 
 
 
-
-
-
 ?>
