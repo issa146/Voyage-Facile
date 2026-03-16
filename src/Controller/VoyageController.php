@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Voyage;
 use App\Repository\VoyageRepository;
 use App\Service\UnsplashService;
@@ -16,23 +17,37 @@ final class VoyageController extends AbstractController
     #[Route('/voyage', name: 'app_voyage')]
     public function index(Request $request, VoyageRepository $voyageRepository, UnsplashService $unsplash, EntityManagerInterface $entityManager): Response
     {
-        
+        $user = $this->getUser();
+
+        if(!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $formule = $user->getFormule();
+
+        if(!$formule){
+            return $this->redirectToRoute('app_formule');
+        }
 
         $destination = trim((string) $request->query->get('destination', '')); # je récupere les parmètere GET  
 
-        // $imageUrl = $unsplash->getImageUrl($destination) ?? ''; # j'appel mon service avec la destination
+         $queryBuilder = $voyageRepository->createQueryBuilder('v')  # je construie une requet pour l'entité voyage
+            ->where('v.formule = :formule')           # j'ajoute une condition where avec un paramètre nommé pour ce protège contre les injections SQL
+            ->setParameter('formule', $formule )     # je donne une valeur au paramètre :formule 
+            ->orderBy('v.destination', 'ASC');      # je fait un tri sur la colonne destination de de l'entité v
 
         # si la bar de recherch n'est pas vide
         if($destination !== '') {
-            $voyages = $voyageRepository->createQueryBuilder('v')  # je construie une requet pour l'entité voyage
-            ->where('LOWER(v.destination) LIKE :destination')   # je utilise la fonction LOWER pour metre tous en minuscules coté bdd et LIKE pour rechercher exactement la destination
-            ->setParameter('destination', '%' . mb_strtolower($destination) . '%' )     # je donne une valeur au paramètre :destination pour protège contre les injections SQL
-            ->orderBy('v.destination', 'ASC')   # je fait un tri sur la colonne destination de de l'entité v
-            ->getQuery()     # je prépare le QueryBuilde requet à ètre excuté 
-            ->getResult();   # j'exécutes la requête sous forme de tableau d'objet
-        } else {
-            $voyages = $voyageRepository->findBy([], ['destination' => 'ASC']); # je récupère tous les voyage
-        }
+            $queryBuilder
+                ->andWhere('LOWER(v.destination) LIKE :destination')     # LOWER permet de metre tous en minscule en BDD  
+                ->setParameter('destination', '%' . mb_strtolower($destination) . '%');  # je passe la valeur et je fait une recherche partous dans la chaine
+              
+        } 
+
+
+        $voyages = $queryBuilder
+        ->getQuery() # je compile la requête
+        ->getResult(); # j'excute la requête
 
 
         $modification = false; # je initialises un flag pour savoir si j'ai modifié au moins un voyage
@@ -62,6 +77,21 @@ final class VoyageController extends AbstractController
 
     #[Route('/voyage/{id}', name: 'voyage_detail', requirements:['id' => '\d+'])]
     public function detail(Voyage $voyage): Response {
+
+        $user = $this->getUser();
+
+        if(!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if(!$user->getFormule()) {
+            return $this->redirectToRoute('app_formule');
+        }
+
+        if($voyage->getFormule() !== $user->getFormule()) { # je compare la formule associée à ce voyage et la formule de l’utilisateur
+
+            throw $this->createAccessDeniedException('Accès interdit');
+        }
  
         return $this->render('voyage/detail.html.twig', [
             'voyage' => $voyage,

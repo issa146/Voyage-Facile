@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %} Détail - {{destination}}{% endblock %}
+{% block title %} Détail - {{voyage.destination}}{% endblock %}
 
 {% block body %}
 <section class= "voyage-detail">
-    <h1>{{destination}}<h1>
+    <h1>{{voyage.destination}}<h1>
 
-    {% if imageUrl %}
-        <img src="{{ imageUrl }}" alt="" style= "max-width: 900px; width: 100%; border-radius: 12px">
+    {% if voyage.imageUrl %}
+        <img src="{{ voyage.imageUrl }}" alt="" style= "max-width: 900px; width: 100%; border-radius: 12px">
     {% endif %}   
 
-    <p> formule : {{ formule }} </p>
-    <p> prix : {{ prix }}€ </p>
+    <p> formule : {{ voyage.formule.nom }} </p>
+    <p> prix : {{ voyage.prix }}€ </p>
 
-    <a href="{{path('app_voyage')}}">retour</a>
+    <a href="{{path('app_voyage')}}">Retour</a>
 
 </section>
 {% endblock %}
