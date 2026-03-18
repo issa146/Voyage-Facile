@@ -33,6 +33,9 @@ class Activite
     #[ORM\JoinColumn(nullable: false)]
     private ?Voyage $voyage = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
 
     public function getId(): ?int
     {
@@ -105,6 +108,18 @@ class Activite
     public function setVoyage(?Voyage $voyage): static
     {
         $this->voyage = $voyage;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

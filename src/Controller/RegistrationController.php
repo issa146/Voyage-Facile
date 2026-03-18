@@ -35,7 +35,7 @@ class RegistrationController extends AbstractController
 
             $security->login($user, 'form_login', 'main');
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_formule');
 
             
         }
