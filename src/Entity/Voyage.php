@@ -223,12 +223,12 @@ class Voyage
         return $this;
     }
 
-    public function getFormule(): ?formule
+    public function getFormule(): ?Formule
     {
         return $this->formule;
     }
 
-    public function setFormule(?formule $formule): static
+    public function setFormule(?Formule $formule): static
     {
         $this->formule = $formule;
 

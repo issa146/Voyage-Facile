@@ -17,16 +17,16 @@ final class VoyageController extends AbstractController
     #[Route('/voyage', name: 'app_voyage')]
     public function index(Request $request, VoyageRepository $voyageRepository, UnsplashService $unsplash, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
+        $user = $this->getUser(); # je récupère l'utilisateur conncté
 
-        if(!$user instanceof User) {
-            return $this->redirectToRoute('app_login');
+        if(!$user instanceof User) { # vérifier que l'utilisateur est connecté
+            return $this->redirectToRoute('app_login');  
         }
 
-        $formule = $user->getFormule();
+        $formule = $user->getFormule(); # je récupère la formule de l'utilisateur
 
-        if(!$formule){
-            return $this->redirectToRoute('app_formule');
+        if(!$formule){ # je vérife si l'utilisateur a une formule
+            return $this->redirectToRoute('app_formule'); 
         }
 
         $destination = trim((string) $request->query->get('destination', '')); # je récupere les parmètere GET  
@@ -39,7 +39,7 @@ final class VoyageController extends AbstractController
         # si la bar de recherch n'est pas vide
         if($destination !== '') {
             $queryBuilder
-                ->andWhere('LOWER(v.destination) LIKE :destination')     # LOWER permet de metre tous en minscule en BDD  
+                ->andWhere('LOWER(v.destination) LIKE :destination')     # avec LOWER je mes tous en minscule en BDD  
                 ->setParameter('destination', '%' . mb_strtolower($destination) . '%');  # je passe la valeur et je fait une recherche partous dans la chaine
               
         } 
@@ -78,13 +78,13 @@ final class VoyageController extends AbstractController
     #[Route('/voyage/{id}', name: 'voyage_detail', requirements:['id' => '\d+'])]
     public function detail(Voyage $voyage): Response {
 
-        $user = $this->getUser();
+        $user = $this->getUser(); # je récupère l'utilisateur conncté
 
-        if(!$user instanceof User) {
+        if(!$user instanceof User) { # vérifier que l'utilisateur est connecté
             return $this->redirectToRoute('app_login');
         }
 
-        if(!$user->getFormule()) {
+        if(!$user->getFormule()) {  # je vérife si l'utilisateur a une formule
             return $this->redirectToRoute('app_formule');
         }
 
