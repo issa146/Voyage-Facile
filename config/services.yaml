@@ -9,6 +9,7 @@
 
 parameters: # je déclare une section de paramètres
     unsplash.access_key: '%env(UNSPLASH_ACCESS_KEY)%' # je créer un paramètres
+    geoapify.api_Key: '%(GEOAPIFY_API_KEY)%'
 
 services: 
     # default configuration for services in *this* file
@@ -30,6 +31,10 @@ services:
     App\Service\UnsplashService:  
         arguments: # je vais donné la valeur au parmètre du constructeur
             $accessKey: '%unsplash.access_key%' 
+
+    App\Service\GeoapifyService:
+        arguments:
+            $apiKey: '%geoapify.api_Key%'
 
        
          
