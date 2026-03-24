@@ -9,7 +9,7 @@
 
 parameters: # je déclare une section de paramètres
     unsplash.access_key: '%env(UNSPLASH_ACCESS_KEY)%' # je créer un paramètres
-    geoapify.api_Key: '%(GEOAPIFY_API_KEY)%'
+    geoapify.api_Key: '%env(GEOAPIFY_API_KEY)%'
 
 services: 
     # default configuration for services in *this* file
