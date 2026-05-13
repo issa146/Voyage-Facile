@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Voyage;
 use App\Repository\VoyageRepository;
+use App\Service\GeoapifyService;
 use App\Service\UnsplashService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
@@ -76,7 +77,7 @@ final class VoyageController extends AbstractController
 
 
     #[Route('/voyage/{id}', name: 'voyage_detail', requirements:['id' => '\d+'])]
-    public function detail(Voyage $voyage): Response {
+    public function detail(Voyage $voyage, GeoapifyService $geoapifyService): Response {
 
         $user = $this->getUser(); # je récupère l'utilisateur conncté
 
@@ -92,12 +93,12 @@ final class VoyageController extends AbstractController
 
             throw $this->createAccessDeniedException('Accès interdit');
         }
+
+        $places = $geoapifyService->getPlaceCity($voyage->getDestination());
  
         return $this->render('voyage/detail.html.twig', [
             'voyage' => $voyage,
         ]); 
-            
-
         
     }
 
