@@ -28,10 +28,10 @@
                 <a class="btn" href="{{path('app_tableau_de_bord')}}">Tableau de bord</a>
 
                 {% if app.user %}
-                <a class="btn" href="{{path('app_logout')}}">Se déconnecter</a>
+                    <a class="btn" href="{{path('app_logout')}}">Se déconnecter</a>
                 {% else %}
-                <a class="btn" href="{{path('app_login')}}">Connexion</a>
-                <a class="btn" href="{{path('app_register')}}">S'inscrire</a>
+                    <a class="btn" href="{{path('app_login')}}">Connexion</a>
+                    <a class="btn" href="{{path('app_register')}}">S'inscrire</a>
                 {% endif %}
             </nav>
         </div>
