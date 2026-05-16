@@ -3,19 +3,20 @@
 namespace App\Service;
 
 use Doctrine\DBAL\Query\Limit;
-use symfony\contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 
 
 class GeoapifyService {
 
 private HttpClientInterface $client;
-private string $apiKey;
+private string $apikey;
 
 
-public function __construct(HttpClientInterface $client, string $apiKey) {
+public function __construct(HttpClientInterface $client, string $apikey) {
 
     $this->client = $client;
-    $this->apiKey = $apiKey;
+    $this->apikey = $apikey;
     
 }
 
@@ -24,20 +25,23 @@ public function getSearchCity(string $city): ?array  {
         $response = $this->client->request('GET', 'https://api.geoapify.com/v1/geocode/search', [ # j'envoie une requette HTTP GET à l'API
             'query' => [
                 'text' => $city, 
-                'apiKey' => $this->apiKey,
+                'apiKey' => $this->apikey,
             ],
         ]);
 
         $data = $response->toArray();
 
-        if(empty($data['features'][0]['properties']['lat']) || empty($data['features'][0]['properties']['lon'])) { # si la valeur est vide je retourne null
+        if(empty($data['features'][0]['geometry']['coordinates'])) {
             return null;
         }
 
+        [$lon, $lat] = $data['features'][0]['geometry']['coordinates'];
+
         return [
-            'lat' => $data['features'][0]['properties']['lat'],
-            'lon' => $data['features'][0]['properties']['lon'],
+            'lat' => $lat,
+            'lon' => $lon,
         ];
+
     }    
 
     public function getPlaceCity(string $city) {
@@ -52,10 +56,10 @@ public function getSearchCity(string $city): ?array  {
 
         $response = $this->client->request('GET', 'https://api.geoapify.com/v2/places', [ # j'envoie une requette HTTP GET à l'API
             'query' => [
-                'categories' => 'tourism.sights,entertainment,museum,leisure.park', # je demande des lieu touristique...
+                'categories' => 'tourism.sights,entertainment,entertainment.museum,leisure.park', # je demande des lieu touristique
                 'filter' => 'circle:' . $lon . ',' . $lat . ',5000', # je demande des lieu dans un rayon de 5 km 
                 'limit' => 10,  # je veut maximum 10 résulta
-                'apiKey' => $this->apiKey, 
+                'apiKey' => $this->apikey, 
             ],
         ]);
 

@@ -98,8 +98,8 @@ final class VoyageController extends AbstractController
  
         return $this->render('voyage/detail.html.twig', [
             'voyage' => $voyage,
-        ]); 
-        
+            'places' => $places,
+        ]);         
     }
 
 }
