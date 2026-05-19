@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Activite;
+use App\Entity\Voyage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,6 +16,17 @@ class ActiviteRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Activite::class);
     }
+
+        public function findByVoyageOrderedByDate(Voyage $voyage): array {
+
+        return $this->createQueryBuilder('a') 
+        ->andWhere('a.voyage = :voyage')
+        ->setParameter('voyage', $voyage)
+        ->orderBy('a.date', 'ASC')
+        ->getQuery()
+        ->getResult();
+        }
+
 
     //    /**
     //     * @return Activite[] Returns an array of Activite objects
@@ -40,4 +52,5 @@ class ActiviteRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
 }

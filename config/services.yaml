@@ -34,7 +34,7 @@ services:
 
     App\Service\GeoapifyService:
         arguments:
-            $apiKey: '%geoapify.api_key%'
+            $apikey: '%geoapify.api_key%'
 
        
          

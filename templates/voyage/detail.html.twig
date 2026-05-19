@@ -1,20 +1,40 @@
 {% extends 'base.html.twig' %}
 
-
-{% block title %} Détail - {{voyage.destination}}{% endblock %}
+{% block title %}Detail - {{ voyage.destination }}{% endblock %}
 
 {% block body %}
-<section class= "voyage-detail">
-    <h1>{{voyage.destination}}<h1>
+<section class="voyage-detail">
+    <h1>{{ voyage.destination }}</h1>
 
     {% if voyage.imageUrl %}
-        <img src="{{ voyage.imageUrl }}" alt="" style= "max-width: 900px; width: 100%; border-radius: 12px">
-    {% endif %}   
+        <img src="{{ voyage.imageUrl }}" alt="{{ voyage.destination }}" style="max-width: 900px; width: 100%; border-radius: 12px">
+    {% endif %}
 
-    <p> formule : {{ voyage.formule.nom }} </p>
-    <p> prix : {{ voyage.prix }}€ </p>
+    <p>formule : {{ voyage.formule.nom }}</p>
+    <p>prix : {{ voyage.prix }} EUR</p>
 
-    <a href="{{path('app_voyage')}}">Retour</a>
+    <section class="activites">
+        <h2>Activites autour de {{ voyage.destination }}</h2>
 
+        {% for activite in activites %}
+            <article class="activite-card">
+                {% if voyage.imageUrl %}
+                    <img src="{{ voyage.imageUrl }}" alt="{{ activite.titre|default('Activite') }}">
+                {% endif %}
+
+                <div class="activite-contenu">
+                    <h3 class="activite-name">{{ activite.titre|default('titre non disponible') }}</h3>
+                    <p class="activite-address">{{ activite.lieu|default('Lieu non disponible') }}</p>
+                    <p class="activite-category">{{ activite.description|default('Description non disponible') }}</p>
+                    <p class="activite-category">{{ activite.date ? activite.date|date('d/m/Y') : 'Date non disponible' }}</p>
+                    <p class="activite-category">{{ activite.image|default('Image non disponible') }}</p>
+                </div>
+            </article>
+        {% else %}
+            <p>Aucune activite disponible pour le moment.</p>
+        {% endfor %}
+    </section>
+
+    <a href="{{ path('app_voyage') }}">Retour</a>
 </section>
 {% endblock %}
