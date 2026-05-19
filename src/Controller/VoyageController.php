@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Activite;
 use App\Entity\User;
 use App\Entity\Voyage;
 use App\Repository\VoyageRepository;
+use App\Repository\ActiviteRepository;
 use App\Service\GeoapifyService;
 use App\Service\UnsplashService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -77,7 +79,7 @@ final class VoyageController extends AbstractController
 
 
     #[Route('/voyage/{id}', name: 'voyage_detail', requirements:['id' => '\d+'])]
-    public function detail(Voyage $voyage, GeoapifyService $geoapifyService): Response {
+    public function detail(Voyage $voyage, GeoapifyService $geoapifyService, ActiviteRepository $activiteRepository, EntityManagerInterface $entityManager): Response {
 
         $user = $this->getUser(); # je récupère l'utilisateur conncté
 
@@ -94,12 +96,49 @@ final class VoyageController extends AbstractController
             throw $this->createAccessDeniedException('Accès interdit');
         }
 
-        $places = $geoapifyService->getPlaceCity($voyage->getDestination());
+        $activites = $activiteRepository->findByVoyageOrderedByDate($voyage);
+
+ 
+
+        $formuleName = $voyage->getFormule()->getNom(); // je récupère le nom de la formule
+
+        $limit = 7;
+
+        if($formuleName === 'Premium') {
+            $limit = 14;
+        }
+
+        if($formuleName === 'Pro') {
+            $limit = 21;
+        }
+
+        if(!$activites) {
+            $places = $geoapifyService->getPlaceCity($voyage->getDestination(), $limit);
+        } else {
+            $places = [];
+        }
+
+        foreach ($places as $index => $place) {
+            $date = \DateTime::createFromInterface($voyage->getDateDebut()); 
+            $date->modify('+' . $index . ' days');
+            $activite = new Activite();
+            $activite->setTitre($place['name'] ?? null);
+            $activite->setLieu($place['address'] ?? null);
+            $activite->setDescription('Activite recommandee pour votre voyage a ' . $voyage->getDestination());
+            $activite->setDate($date);
+            $activite->setVoyage($voyage);
+
+            $entityManager->persist($activite);
+        }
+
+        $entityManager->flush();
+        $activites = $activiteRepository->findByVoyageOrderedByDate($voyage);
+
  
         return $this->render('voyage/detail.html.twig', [
             'voyage' => $voyage,
             'places' => $places,
+            'activites' => $activites,
         ]);         
     }
-
 }
