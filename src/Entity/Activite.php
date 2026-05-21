@@ -33,7 +33,7 @@ class Activite
     #[ORM\JoinColumn(nullable: false)]
     private ?Voyage $voyage = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $image = null;
 
 

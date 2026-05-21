@@ -71,7 +71,7 @@ final class VoyageController extends AbstractController
         }
 
             return $this->render('voyage/index.html.twig', [
-            'destination' => $destination,
+            'destination' => $destination, // hj
             'voyages' =>$voyages   
         ]);     
 
@@ -79,7 +79,11 @@ final class VoyageController extends AbstractController
 
 
     #[Route('/voyage/{id}', name: 'voyage_detail', requirements:['id' => '\d+'])]
-    public function detail(Voyage $voyage, GeoapifyService $geoapifyService, ActiviteRepository $activiteRepository, EntityManagerInterface $entityManager): Response {
+    public function detail(Voyage $voyage,
+        GeoapifyService $geoapifyService,
+        ActiviteRepository $activiteRepository,
+        EntityManagerInterface $entityManager,
+        UnsplashService $unsplash): Response {
 
         $user = $this->getUser(); # je récupère l'utilisateur conncté
 
@@ -112,11 +116,13 @@ final class VoyageController extends AbstractController
             $limit = 21;
         }
 
+        $places = [];
+
         if(!$activites) {
-            $places = $geoapifyService->getPlaceCity($voyage->getDestination(), $limit);
-        } else {
-            $places = [];
+            $places = $geoapifyService->getPlaceCity($voyage->getDestination(), $limit) ?? [];
         }
+
+        $usedImages = [];
 
         foreach ($places as $index => $place) {
             $date = \DateTime::createFromInterface($voyage->getDateDebut()); 
@@ -128,17 +134,63 @@ final class VoyageController extends AbstractController
             $activite->setDate($date);
             $activite->setVoyage($voyage);
 
+            $searchImage = ($place['name'] ?? '') . ' ' . $voyage->getDestination();
+            $imageUrl = $this->selectUnusedImage($unsplash->getImageUrls($searchImage), $usedImages);
+
+            if($imageUrl) {
+                $activite->setImage($imageUrl);
+                $usedImages[$imageUrl] = true;
+            }
+
             $entityManager->persist($activite);
         }
 
         $entityManager->flush();
         $activites = $activiteRepository->findByVoyageOrderedByDate($voyage);
 
+        $modificationActivites = false;
+
+        if(!$places) {
+            foreach ($activites as $activite) {
+                $currentImage = $activite->getImage();
+
+                if($currentImage && !isset($usedImages[$currentImage])) {
+                    $usedImages[$currentImage] = true;
+                    continue;
+                }
+
+                if(!$currentImage || isset($usedImages[$currentImage])) {
+                    $imageUrl = $this->selectUnusedImage($unsplash->getImageUrls($activite->getTitre() . ' ' . $voyage->getDestination()), $usedImages);
+                    
+
+                    if($imageUrl && $imageUrl !== $currentImage) {
+                        $activite->setImage($imageUrl);
+                        $usedImages[$imageUrl] = true;
+                        $modificationActivites = true;
+                    }
+                }
+            }
+        }
+         
+        if($modificationActivites) {
+            $entityManager->flush();
+        }
  
         return $this->render('voyage/detail.html.twig', [
             'voyage' => $voyage,
             'places' => $places,
             'activites' => $activites,
         ]);         
+    }
+
+    private function selectUnusedImage(array $imageUrls, array $usedImages): ?string
+    {
+        foreach ($imageUrls as $imageUrl) {
+            if(!isset($usedImages[$imageUrl])) {
+                return $imageUrl;
+            }
+        }
+
+        return $imageUrls[0] ?? null;
     }
 }
