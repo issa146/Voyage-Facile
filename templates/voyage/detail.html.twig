@@ -18,16 +18,17 @@
 
         {% for activite in activites %}
             <article class="activite-card">
-                {% if voyage.imageUrl %}
-                    <img src="{{ voyage.imageUrl }}" alt="{{ activite.titre|default('Activite') }}">
-                {% endif %}
-
                 <div class="activite-contenu">
                     <h3 class="activite-name">{{ activite.titre|default('titre non disponible') }}</h3>
                     <p class="activite-address">{{ activite.lieu|default('Lieu non disponible') }}</p>
                     <p class="activite-category">{{ activite.description|default('Description non disponible') }}</p>
                     <p class="activite-category">{{ activite.date ? activite.date|date('d/m/Y') : 'Date non disponible' }}</p>
-                    <p class="activite-category">{{ activite.image|default('Image non disponible') }}</p>
+                    {% if activite.image %}
+                        <img src="{{ activite.image }}" alt="{{ activite.titre }}">
+                    {% else %}
+                        <p>Aucune image pour cette activite</p>
+                    {% endif %}        
+                
                 </div>
             </article>
         {% else %}
