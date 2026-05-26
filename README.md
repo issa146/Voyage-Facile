@@ -48,3 +48,77 @@ DevOps
 Docker
 
 Git & GitHub
+
+
+## Installation du projet
+
+### Prerequis
+
+- Docker et Docker Compose installes
+- Git installe
+
+### Etapes d'installation
+
+1. Cloner le projet :
+
+```bash
+git clone <url-du-repository>
+cd test
+```
+
+2. Verifier le fichier `.env`
+
+La connexion a la base de donnees est deja configuree pour Docker :
+
+```env
+DATABASE_URL="mysql://app:app@db:3306/test?serverVersion=8.0&charset=utf8mb4"
+```
+
+3. Lancer les conteneurs Docker :
+
+```bash
+docker compose up -d --build
+```
+
+4. Installer les dependances PHP dans le conteneur :
+
+```bash
+docker compose exec php composer install
+```
+
+5. Creer ou mettre a jour la base de donnees avec les migrations :
+
+```bash
+docker compose exec php php bin/console doctrine:migrations:migrate
+```
+
+6. Charger les donnees de test si besoin :
+
+```bash
+docker compose exec php php bin/console doctrine:fixtures:load
+```
+
+7. Acceder au projet :
+
+- Application : `http://localhost:8085`
+- phpMyAdmin : `http://localhost:8082`
+
+Identifiants phpMyAdmin :
+
+- Serveur : `db`
+- Utilisateur : `root`
+- Mot de passe : `root`
+
+### Commandes utiles
+
+Arreter le projet :
+
+```bash
+docker compose down
+```
+
+Relancer le projet :
+
+```bash
+docker compose up -d
+```

@@ -44,7 +44,6 @@ final class VoyageController extends AbstractController
             $queryBuilder
                 ->andWhere('LOWER(v.destination) LIKE :destination')     # avec LOWER je mes tous en minscule en BDD  
                 ->setParameter('destination', '%' . mb_strtolower($destination) . '%');  # je passe la valeur et je fait une recherche partous dans la chaine
-              
         } 
 
 
